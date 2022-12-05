@@ -41,7 +41,7 @@ while (true) {
       method: "POST",
       body: new URLSearchParams({
         command,
-        platform: "win32",
+        platform: PLATFORM,
         transcript,
       })
     }
