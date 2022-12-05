@@ -5,6 +5,7 @@ import { AUTH0_CLIENT } from "./globs/node";
 import { createInterface } from "readline/promises";
 import { stdin, stdout } from "process";
 import { DOMAIN_URL, PLATFORM } from "./globs/shared";
+import { appendToTranscript, getTranscript } from "./utils/filesystem";
 
 const authorized = await AUTH0_CLIENT.isAuthorized();
 if (!authorized) {
@@ -28,7 +29,9 @@ rl.on("SIGINT", () => {
 clear({ flush: true });
 
 while (true) {
+  const transcript = await getTranscript();
   const command = await rl.question(` ${style("$", ["bold"])} `);
+  // console.log({ transcript });
   console.log();
   // console.log(style(command, ["dim"]));
 
@@ -38,12 +41,14 @@ while (true) {
       method: "POST",
       body: new URLSearchParams({
         command,
-        platform: PLATFORM,
+        platform: "win32",
+        transcript,
       })
     }
   ).then((res) => res.json()) as any;
 
-  console.log(style(native.trim(), ["dim"]));
-
+  console.log(style(native, ["dim"]));
   console.log();
+
+  await appendToTranscript(command, native);
 }
