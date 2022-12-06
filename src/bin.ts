@@ -4,8 +4,9 @@ import { clear, error, log, style } from "@tsmodule/log";
 import { AUTH0_CLIENT } from "./globs/node";
 import { createInterface } from "readline";
 import { stdin, stdout } from "process";
-import { DOMAIN_URL, PLATFORM } from "./globs/shared";
+import { DOMAIN_URL, PLATFORM, VERSION } from "./globs/shared";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
+import { readFile } from "fs/promises";
 
 const authorized = await AUTH0_CLIENT.isAuthorized();
 if (!authorized) {
@@ -27,6 +28,12 @@ rl.on("SIGINT", () => {
 });
 
 clear({ flush: true });
+
+const logoPath = new URL("./header.txt", import.meta.url);
+const logoFile = await readFile(logoPath, "utf8");
+const logoText = logoFile.replace("(A version number goes here)", VERSION);
+
+console.log(style(logoText, ["dim"]));
 
 while (true) {
   const transcript = await getTranscript();

@@ -1,7 +1,7 @@
 {
-  "name": "gsh",
+  "name": "@gptlabs/gsh",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "platform": "node",
   "engines": {
@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "dev": "tsmodule dev",
-    "build": "tsmodule build --standalone \"src/bin.ts\"",
+    "build": "tsmodule build --standalone \"src/{bin.ts,header.txt}\"",
     "lint": "eslint --fix",
     "pretest": "yarn build -d && npm link -f",
     "test": "cross-env NODE_ENV=test yarn ava",
