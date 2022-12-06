@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import { clear, error, log, style } from "@tsmodule/log";
 import { AUTH0_CLIENT } from "./globs/node";
-import { createInterface } from "readline/promises";
+import { createInterface } from "readline";
 import { stdin, stdout } from "process";
 import { DOMAIN_URL, PLATFORM } from "./globs/shared";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
@@ -30,7 +30,9 @@ clear({ flush: true });
 
 while (true) {
   const transcript = await getTranscript();
-  const command = await rl.question(` ${style("$", ["bold", "dim"])} `);
+  const command = await new Promise<string>((resolve) => {
+    rl.question(` ${style("$", ["bold", "dim"])} `, resolve);
+  });
   // console.log({ transcript });
   console.log();
   // console.log(style(command, ["dim"]));
