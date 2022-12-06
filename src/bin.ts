@@ -56,7 +56,11 @@ while (true) {
     }
   ).then((res) => res.json()) as any;
 
-  console.log(style(native.trim().substring(1).trim(), ["dim"]));
+  const replacedLinePrefixes = native.trim().split("\n").map(
+    (line: string) => line.replace(/^\$ /, "")
+  ).join("\n");
+
+  console.log(style(replacedLinePrefixes, ["dim"]));
   console.log();
 
   await appendToTranscript(command, native);
