@@ -30,7 +30,7 @@ clear({ flush: true });
 
 while (true) {
   const transcript = await getTranscript();
-  const command = await rl.question(` ${style("$", ["bold"])} `);
+  const command = await rl.question(` ${style("$", ["bold", "dim"])} `);
   // console.log({ transcript });
   console.log();
   // console.log(style(command, ["dim"]));

@@ -32,7 +32,9 @@ export const appendToTranscript = async (
   native: string,
 ) => {
   const transcriptItem =
-`${command}
+`
+
+${command}
 
 ${native}`;
 
