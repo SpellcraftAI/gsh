@@ -16,14 +16,14 @@ Powershell, Japanese, Latin, whatever you want.
 It converses with you by printing to stdout and taking the actions you ask for
 by calling commands.
 
-![](demo1.png)
+![](https://raw.githubusercontent.com/gptlabs/gsh/cc47fbcb4df8164053346d5e00a42296a0badc6d/demo1.png)
 
 ### Refuses to destroy data without confirmation.
 
 As a security and safety precaution, GSH is designed to prompt before
 potentially destroying data.
 
-![](demo2.png)
+![](https://raw.githubusercontent.com/gptlabs/gsh/cc47fbcb4df8164053346d5e00a42296a0badc6d/demo2.png)
 
 ## Reporting bugs
 
