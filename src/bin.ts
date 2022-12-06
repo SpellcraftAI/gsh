@@ -56,7 +56,7 @@ while (true) {
     }
   ).then((res) => res.json()) as any;
 
-  console.log(style(native, ["dim"]));
+  console.log(style(native.trim().substring(1).trim(), ["dim"]));
   console.log();
 
   await appendToTranscript(command, native);
