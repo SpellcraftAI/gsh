@@ -60,21 +60,23 @@ while (true) {
   const replacedLinePrefixes = native.trim().split("\n").map(
     (line: string) => line.replace(/^\$ /, "")
   ).join("\n");
+  const args = process.argv.slice(2);
 
-  // execute replacedLinePrefixes as a shell script
-  console.log(style(replacedLinePrefixes, ["dim"]));
-
-  exec(replacedLinePrefixes, (err, stdout, stderr) => {
-    if (err) {
+  if (args.includes('--danger')) {
+    exec(replacedLinePrefixes, (err, stdout, stderr) => {
+      if (err) {
         console.error(err);
         return;
-    }
-    if (stderr) {
+      }
+      if (stderr) {
         console.error(stderr);
-    }
-    console.log(stdout);
-});
-  
+      }
+      console.log(stdout);
+    });
+  } else {
+    console.log(replacedLinePrefixes);
+  }
+
   console.log();
 
   await appendToTranscript(command, native);
