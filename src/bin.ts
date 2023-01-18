@@ -63,6 +63,7 @@ while (true) {
   const args = process.argv.slice(2);
 
   if (args.includes('--danger')) {
+    console.log(replacedLinePrefixes);
     exec(replacedLinePrefixes, (err, stdout, stderr) => {
       if (err) {
         console.error(err);
@@ -71,11 +72,11 @@ while (true) {
       if (stderr) {
         console.error(stderr);
       }
+
       console.log(stdout);
     });
-  } else {
-    console.log(replacedLinePrefixes);
-  }
+  } 
+
 
   console.log();
 
