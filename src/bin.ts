@@ -7,6 +7,7 @@ import { stdin, stdout } from "process";
 import { DOMAIN_URL, PLATFORM, VERSION } from "./globs/shared";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
 import { readFile } from "fs/promises";
+import { exec } from "child_process";
 
 const authorized = await AUTH0_CLIENT.isAuthorized();
 if (!authorized) {
@@ -60,7 +61,20 @@ while (true) {
     (line: string) => line.replace(/^\$ /, "")
   ).join("\n");
 
+  // execute replacedLinePrefixes as a shell script
   console.log(style(replacedLinePrefixes, ["dim"]));
+
+  exec(replacedLinePrefixes, (err, stdout, stderr) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    if (stderr) {
+        console.error(stderr);
+    }
+    console.log(stdout);
+});
+  
   console.log();
 
   await appendToTranscript(command, native);

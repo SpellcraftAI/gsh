@@ -25,5 +25,13 @@
     "release": "release-it --ci -VV",
     "canary": "release-it --preRelease=canary --ci -VV",
     "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "@tsmodule/log": "^2.2.1",
+    "@tsmodule/tsmodule": "^41.26.0",
+    "@types/node": "^18.11.18",
+    "auth0-node-client": "^3.8.0",
+    "ava": "^5.1.1",
+    "typescript": "^4.9.4"
   }
 }
