@@ -25,7 +25,7 @@
     "release": "release-it --ci -VV",
     "canary": "release-it --preRelease=canary --ci -VV",
     "prepublishOnly": "yarn build",
-    "danger": "yarn build && node dist/bin.js --danger"
+    "danger": "yarn && yarn build && node dist/bin.js --danger"
   },
   "dependencies": {
     "@tsmodule/log": "^2.2.1",
