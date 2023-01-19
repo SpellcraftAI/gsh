@@ -27,6 +27,12 @@ export const getTranscript = async () => {
   return file || "";
 };
 
+export const rewriteTranscript = async (transcript: string) => {
+  await writeFile(CONFIG_FILES.TRANSCRIPT, "", "utf8");
+  console.log('Rewriting transcript:', transcript)
+  await writeFile(CONFIG_FILES.TRANSCRIPT, transcript, { flag: "a" });
+}
+
 export const appendToTranscript = async (
   command: string,
   native: string,
