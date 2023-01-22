@@ -5,9 +5,9 @@ import { AUTH0_CLIENT } from "./globs/node";
 import { createInterface } from "readline";
 import { stdin, stdout } from "process";
 import { VERSION } from "./globs/shared";
-import { appendToTranscript, getTranscript, rewriteTranscript } from "./utils/filesystem";
-import { readFile } from "fs/promises";
+import { appendToTranscript, getTranscript } from "./utils/filesystem";
 import { fetchResponseFromApi } from "./utils/api";
+import { readFile } from "fs/promises";
 
 const authorized = await AUTH0_CLIENT.isAuthorized();
 if (!authorized) {
@@ -36,22 +36,8 @@ const logoText = logoFile.replace("(A version number goes here)", VERSION);
 
 console.log(style(logoText, ["dim"]));
 
-// a function that checks if transcript has more than 3000 tokens
-// if so, it will call fetchResponseFromApi with the command "Summarize the transcript"
-// and the transcript as the argument
-
-const enforceTranscriptLimit = async (transcript: string) => {
-  const transcriptTokens = transcript.split(" ").length;
-  if (transcriptTokens > 3000) {
-    const { native } = await fetchResponseFromApi("Summarize the transcript", transcript)
-    console.log(native);
-    await rewriteTranscript(native);
-  }
-}
-
 while (true) {
   const transcript = await getTranscript();
-  await enforceTranscriptLimit(transcript);
   const command = await new Promise<string>((resolve) => {
     rl.question(` ${style("$", ["bold", "dim"])} `, resolve);
   });
