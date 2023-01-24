@@ -6,7 +6,7 @@ import { stdin, stdout } from "process";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
 import { fetchResponseFromApi } from "./utils/api";
 import { checkAuth } from "./utils/api";
-import { displayLogoAndVersion, displayWarning, executeCommand, promptStyle as styledPrompt } from "./utils/console";
+import { displayDimmed, displayLogoAndVersion, displayWarning, executeCommand, promptStyle as styledPrompt } from "./utils/console";
 
 checkAuth();
 
@@ -43,9 +43,10 @@ while (true) {
     (line: string) => line.replace(/^\$ /, "")
   ).join("\n");
 
-  console.log(replacedLinePrefixes);
+  displayDimmed(replacedLinePrefixes);
+
   if (shouldExecute) {
-    executeCommand(replacedLinePrefixes);
+    await executeCommand(replacedLinePrefixes);
   }
 
   console.log();

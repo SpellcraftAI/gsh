@@ -15,6 +15,10 @@ export const displayWarning = (message: string) => {
     console.log(style(message, ["bold", "yellow"]));
 }
 
+export const displayDimmed = (message: string) => {
+    style(message, ["dim"])
+}
+
 export const promptStyle = ` ${style("$", ["bold", "dim"])} `;
 
 export const executeCommand = async (command: string) => {
