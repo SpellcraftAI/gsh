@@ -1,6 +1,6 @@
 import { AUTH0_CLIENT } from "../globs/node";
-<<<<<<< HEAD
 import { error, log } from "@tsmodule/log";
+import { DOMAIN_URL, PLATFORM } from "../globs/shared";
 
 export async function checkAuth() {
     const authorized = await AUTH0_CLIENT.isAuthorized();
@@ -12,8 +12,7 @@ export async function checkAuth() {
 
     process.exit(1);
     }
-=======
-import { DOMAIN_URL, PLATFORM } from "../globs/shared";
+}
 
 export const fetchResponseFromApi = async (command: string, transcript: string) => {
     return await AUTH0_CLIENT.fetch(
@@ -26,6 +25,5 @@ export const fetchResponseFromApi = async (command: string, transcript: string) 
         transcript,
       })
     }
-  ).then((res) => res.json()) as any;
->>>>>>> feat/transcript-limit
+  ).then((res) => res.json())
 }
