@@ -59,3 +59,5 @@ export const DOMAIN_URL =
 
 
 export const PLATFORM = platform();
+
+export const TRANSCRIPT_LIMIT = 3500;

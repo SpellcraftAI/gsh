@@ -4,8 +4,9 @@ import { clear, error, log, style } from "@tsmodule/log";
 import { AUTH0_CLIENT } from "./globs/node";
 import { createInterface } from "readline";
 import { stdin, stdout } from "process";
-import { DOMAIN_URL, PLATFORM, VERSION } from "./globs/shared";
+import { VERSION } from "./globs/shared";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
+import { fetchResponseFromApi } from "./utils/api";
 import { readFile } from "fs/promises";
 import { exec } from "child_process";
 
@@ -45,17 +46,7 @@ while (true) {
   console.log();
   // console.log(style(command, ["dim"]));
 
-  const { native } = await AUTH0_CLIENT.fetch(
-    `${DOMAIN_URL}/api/gsh/shell`,
-    {
-      method: "POST",
-      body: new URLSearchParams({
-        command,
-        platform: PLATFORM,
-        transcript,
-      })
-    }
-  ).then((res) => res.json()) as any;
+  const { native } = await fetchResponseFromApi(command, transcript)
 
   const replacedLinePrefixes = native.trim().split("\n").map(
     (line: string) => line.replace(/^\$ /, "")
