@@ -6,7 +6,14 @@ import { stdin, stdout } from "process";
 import { appendToTranscript, getTranscript } from "./utils/filesystem";
 import { fetchResponseFromApi } from "./utils/api";
 import { checkAuth } from "./utils/api";
-import { displayDimmed, displayLogoAndVersion, displayWarning, executeCommand, promptStyle as styledPrompt } from "./utils/console";
+import {
+  displayDimmed,
+  displayLogoAndVersion,
+  displayWarning,
+  executeCommand,
+  promptStyle as styledPrompt,
+  trimLinePrefixes,
+} from "./utils/console";
 
 checkAuth();
 
@@ -39,17 +46,19 @@ while (true) {
 
   const { native } = await fetchResponseFromApi(command, transcript)
 
-  const replacedLinePrefixes = native.trim().split("\n").map(
-    (line: string) => line.replace(/^\$ /, "")
-  ).join("\n");
+  if (native) {
+    const replacedLinePrefixes = trimLinePrefixes(native);
 
-  displayDimmed(replacedLinePrefixes);
+    displayDimmed(replacedLinePrefixes);
 
-  if (shouldExecute) {
-    await executeCommand(replacedLinePrefixes);
+    console.log();
+
+    if (shouldExecute) {
+      await executeCommand(replacedLinePrefixes);
+    }
+
+    console.log();
+
+    await appendToTranscript(command, native);
   }
-
-  console.log();
-
-  await appendToTranscript(command, native);
 }

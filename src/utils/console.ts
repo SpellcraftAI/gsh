@@ -16,8 +16,12 @@ export const displayWarning = (message: string) => {
 }
 
 export const displayDimmed = (message: string) => {
-    style(message, ["dim"])
+    console.log(style(message, ["dim"]));
 }
+
+export const trimLinePrefixes = (shellText: string) => shellText.trim().split("\n").map(
+    (line: string) => line.replace(/^\$ /, "")
+  ).join("\n");
 
 export const promptStyle = ` ${style("$", ["bold", "dim"])} `;
 
