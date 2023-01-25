@@ -28,6 +28,9 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "gpt-3-encoder": "^1.1.4"
+    "@tsmodule/log": "^2.2.1",
+    "@tsmodule/tsmodule": "^41.26.0",
+    "gpt-3-encoder": "^1.1.4",
+    "mic": "^2.1.2"
   }
 }
