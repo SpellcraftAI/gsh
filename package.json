@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "tsmodule dev",
     "build": "tsmodule build --standalone \"src/{bin.ts,header.txt}\"",
-    "postbuild": "cp node_modules/gpt-3-encoder/encoder.json dist/encoder.json && cp node_modules/gpt-3-encoder/vocab.bpe dist/vocab.bpe",
+    "postinstall": "cp ../node_modules/gpt-3-encoder/encoder.json dist/encoder.json && cp ../node_modules/gpt-3-encoder/vocab.bpe dist/vocab.bpe",
     "lint": "eslint --fix",
     "pretest": "yarn build -d && npm link -f",
     "test": "cross-env NODE_ENV=test yarn ava",
@@ -26,8 +26,5 @@
     "release": "release-it --ci -VV",
     "canary": "release-it --preRelease=canary --ci -VV",
     "prepublishOnly": "yarn build"
-  },
-  "dependencies": {
-    "gpt-3-encoder": "^1.1.4"
   }
 }
