@@ -13,7 +13,9 @@
   },
   "files": [
     "dist/**/*.js",
-    "dist/**/*.txt"
+    "dist/**/*.txt",
+    "dist/encoder.json",
+    "dist/vocab.bpe"
   ],
   "scripts": {
     "dev": "tsmodule dev",
