@@ -1,6 +1,6 @@
 {
   "name": "@gptlabs/gsh",
-  "version": "0.0.7-canary.0",
+  "version": "0.0.7",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "platform": "node",
