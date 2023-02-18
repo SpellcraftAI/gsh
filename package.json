@@ -26,5 +26,8 @@
     "release": "release-it --ci -VV",
     "canary": "release-it --preRelease=canary --ci -VV",
     "prepublishOnly": "yarn build"
+  },
+  "publishConfig": {
+	  "registry": "https://registry.npmjs.org/"
   }
 }
