@@ -18,6 +18,7 @@ interface shellResponse {
 }
 
 export const fetchResponseFromApi = async (command: string, transcript: string) => {
+
   return await AUTH0_CLIENT.fetch(
     `${DOMAIN_URL}/api/gsh/shell`,
     {
@@ -28,5 +29,5 @@ export const fetchResponseFromApi = async (command: string, transcript: string) 
         transcript,
       })
     }
-  ).then((res) => res.json()) as shellResponse;
+  ).then(async (res) => await res.json()) as shellResponse;
 }
