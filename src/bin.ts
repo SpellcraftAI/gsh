@@ -25,10 +25,11 @@ rl.on("SIGINT", () => {
 });
 
 const isDryMode = process.argv.slice(2).includes('--dry-mode');
+await displayLogoAndVersion();
 if (isDryMode) {
   displayWarning("You're running in dry-mode, no command will be executed.");
 }
-await displayLogoAndVersion();
+
 
 while (true) {
   const transcript = await getTranscript();
@@ -39,9 +40,9 @@ while (true) {
   try {
     const { native } = await fetchResponseFromApi(command, transcript)
     const replacedLinePrefixes = trimLinePrefixes(native)
-    displayDimmed(replacedLinePrefixes);
     console.log();
     if (!isDryMode) {
+      console.log();
       await executeCommand(replacedLinePrefixes);
       console.log();
     } else {

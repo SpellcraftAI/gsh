@@ -1,14 +1,26 @@
 import { log, style } from "@tsmodule/log";
 import { readFile } from "fs/promises";
-import child_process from "child_process";
+import { createShell } from "universal-shell";
 import { VERSION } from "../globs/shared";
-import { promisify } from "util";
-
 export const executeCommand = async (command: string) => {
-    const exec = promisify(child_process.exec);
-    const { stdout, stderr } = await exec(`${command}`);
-    displayPrompt(`${stdout}`);
-    displayError(`${stderr}`);
+    const shell = createShell({
+    stdio: ["inherit"],
+    shell: true,
+    log: true,
+    });
+    const startTime = performance.now();
+    const { code: exitCode } = await shell.run(`${command}`);
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+  
+  
+    const failed = exitCode !== 0;
+    if (failed) {
+        displayWarning(
+        style(`${command} exited with code ${exitCode}.`, ["dim", failed ? "red" : "green"]) + "\n" +
+        `Execution time: ${duration.toFixed(2)}ms`,
+        );
+    }
 }
 
 export const displayLogoAndVersion = async () => {
