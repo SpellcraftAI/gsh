@@ -20,6 +20,10 @@ const rl = createInterface({
   output: stdout
 });
 
+rl.on("SIGINT", () => {
+  process.exit(1);
+});
+
 const isDryMode = process.argv.slice(2).includes('--dry-mode');
 if (isDryMode) {
   displayWarning("You're running in dry-mode, no command will be executed.");
