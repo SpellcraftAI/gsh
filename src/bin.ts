@@ -45,8 +45,8 @@ while (true) {
       console.log();
     }
     await appendToTranscript(command, native);
-  } catch (e) {
+  } catch (e: any) {
     console.log();
-    displayWarning("There was an error fetching the response from the API.");
+    displayWarning(`Error: ${e.message}`);
   }
 }
