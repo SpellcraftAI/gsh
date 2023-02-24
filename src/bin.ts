@@ -10,15 +10,25 @@ import {
   executeShellCommand,
   getModifiers,
 } from "./utils/console";
-import { displayError, trimLinePrefixes, promptStyle, displayOutput } from "./utils/display";
+import {
+  displayError,
+  trimLinePrefixes,
+  promptStyle,
+  displayOutput,
+  displayAlert,
+} from "./utils/display";
 
 checkAuth();
-displayLogoAndVersion();
+await displayLogoAndVersion();
 const { isExecuting, isDryMode, isEntrapped } = await getModifiers();
+isExecuting &&
+  displayAlert(
+    "COMMANDS WILL BE EXECUTED. USE WITH CAUTION. IF YOU ARE NOT SURE, USE DRY MODE: `gsh --dry-mode`."
+  );
 
 const rl = createInterface({
   input: stdin,
-  output: stdout
+  output: stdout,
 });
 
 rl.on("SIGINT", () => {
@@ -30,19 +40,16 @@ while (true) {
     const userInput = await new Promise<string>((resolve) => {
       rl.question(promptStyle, resolve);
     });
-
     const context = isEntrapped ? await getEntrapment() : await getTranscript();
     const command = isEntrapped ? await entrapCommand(userInput) : userInput;
-
-    const { native } = await fetchResponseFromApi(command, context)
-    const replacedLinePrefixes = trimLinePrefixes(native)
+    const { native } = await fetchResponseFromApi(command, context);
+    const replacedLinePrefixes = trimLinePrefixes(native);
 
     if (isExecuting) {
       console.log();
       await executeShellCommand(replacedLinePrefixes);
       console.log();
     } else {
-
       await displayOutput(replacedLinePrefixes, isDryMode);
     }
     await appendToLog(isEntrapped, command, native);

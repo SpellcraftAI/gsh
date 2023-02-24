@@ -6,7 +6,6 @@ export const trimLinePrefixes = (shellText: string) => shellText?.trim().split("
 
 export const promptStyle = ` ${style("$", ["bold", "dim"])} `;
 
-
 const displayEntrapmentSeparator = () => log('\n-- [Entrapment] --\n', ["bold", "red", "underline"]);
 
 export const displayEntrapment = (entrapment: string) => {
@@ -22,7 +21,6 @@ export const displayHelp = () => {
     --dry-mode: run in dry-mode, no command will be executed. \n
     --entrap: experimental feature. This will try to simulate a remote SSH session. Change the entrapment on ~/.gsh/entrapment.txt to test different sessions.\n
     --clear: clear transcript and entrapped log. \n
-    --debug: display the entrapment. \n
     --help: display this help. \n
     `);
 }
@@ -30,6 +28,10 @@ export const displayHelp = () => {
 
 export const displayWarning = (message: string) => {
     log(style(message, ["bold", "yellow"]));
+}
+
+export const displayAlert = (message: string) => {
+    log(style(message, ["bold", "red", "underline"]));
 }
 
 export const displayError = (message: string) => {

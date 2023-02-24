@@ -47,7 +47,6 @@ const getMode = (args: string[]) => {
                 displayWarning("You're running in entrap-mode, no command will be executed.");
                 break;
             default:
-                displayWarning("Commands will be executed. It can have unintended consequences. Use at your own risk.")
                 break;
         }
     });
@@ -56,13 +55,13 @@ const getMode = (args: string[]) => {
 }
 
 export const getModifiers = async () => {
-    const { mode } = await promptSetup();
+    const mode = await promptSetup();
     const isEntrapped = mode === "entrap";
     const isDryMode = mode === "dry-mode";
     const isExecuting = !isDryMode && !isEntrapped;
-
     return { isDryMode, isEntrapped, isExecuting };
 }
+
 const executePreCommand = async (preCommand: string) => {
     switch (preCommand) {
         case "clear":
@@ -70,10 +69,6 @@ const executePreCommand = async (preCommand: string) => {
             break;
         case "help":
             displayHelp();
-            break;
-        case "debug":
-            const entrapment = await getEntrapment() || DEFAULT_ENTRAPMENT;
-            await displayEntrapment(entrapment);
             break;
         default:
             break;
@@ -98,15 +93,14 @@ const dispatch = async (args: string[]) => {
 export const promptSetup = async () => {
     const args = process.argv.slice(2);
     const mode = getMode(args);
-    const isDebug = args.includes("--debug");
     const isEntrapped = mode == "entrap";
 
-    if (isEntrapped && isDebug) {
+    if (isEntrapped) {
         const entrapment = await getEntrapment() || DEFAULT_ENTRAPMENT;
-        await displayEntrapment(entrapment);
+        displayEntrapment(entrapment);
     }
-    dispatch(args);
-    return { mode, isDebug };
+    await dispatch(args);
+    return mode;
 }
 
 export const entrapCommand = async (command: string) => {
