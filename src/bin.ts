@@ -2,18 +2,19 @@
 /* eslint-disable no-console */
 import { createInterface } from "readline";
 import { stdin, stdout } from "process";
-import { appendToTranscript, getTranscript } from "./utils/filesystem";
+import { appendToLog, getEntrapment, getTranscript } from "./utils/filesystem";
 import { fetchResponseFromApi, checkAuth } from "./utils/api";
 import {
-  displayDimmed,
   displayLogoAndVersion,
-  displayWarning,
-  executeCommand,
-  promptStyle,
-  trimLinePrefixes,
+  entrapCommand,
+  executeShellCommand,
+  getModifiers,
 } from "./utils/console";
+import { displayError, trimLinePrefixes, promptStyle, displayOutput } from "./utils/display";
 
 checkAuth();
+displayLogoAndVersion();
+const { isExecuting, isDryMode, isEntrapped } = await getModifiers();
 
 const rl = createInterface({
   input: stdin,
@@ -24,34 +25,28 @@ rl.on("SIGINT", () => {
   process.exit(1);
 });
 
-const isDryMode = process.argv.slice(2).includes('--dry-mode');
-await displayLogoAndVersion();
-if (isDryMode) {
-  displayWarning("You're running in dry-mode, no command will be executed.");
-}
-
-
 while (true) {
-  const transcript = await getTranscript();
-  const command = await new Promise<string>((resolve) => {
-    rl.question(promptStyle, resolve);
-  });
-
   try {
-    const { native } = await fetchResponseFromApi(command, transcript)
+    const userInput = await new Promise<string>((resolve) => {
+      rl.question(promptStyle, resolve);
+    });
+
+    const context = isEntrapped ? await getEntrapment() : await getTranscript();
+    const command = isEntrapped ? await entrapCommand(userInput) : userInput;
+   
+    const { native } = await fetchResponseFromApi(command, context)
     const replacedLinePrefixes = trimLinePrefixes(native)
-    console.log();
-    if (!isDryMode) {
+   
+    if (isExecuting) {
       console.log();
-      await executeCommand(replacedLinePrefixes);
-      console.log();
-    } else {
-      displayDimmed(replacedLinePrefixes);
+      await executeShellCommand(replacedLinePrefixes);
       console.log();
     }
-    await appendToTranscript(command, native);
+
+    await displayOutput(replacedLinePrefixes, isDryMode);
+    await appendToLog(isEntrapped, command, native);
   } catch (e: any) {
     console.log();
-    displayWarning(`Error: ${e.message}`);
+    displayError(`Error: ${e.message}`);
   }
 }

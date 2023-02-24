@@ -1,24 +1,27 @@
 import { log, style } from "@tsmodule/log";
 import { readFile } from "fs/promises";
 import { createShell } from "universal-shell";
-import { VERSION } from "../globs/shared";
-export const executeCommand = async (command: string) => {
+import { DEFAULT_ENTRAPMENT, VERSION } from "../globs/shared";
+import { clearTranscriptAndEntrappedLog, getEntrapment } from "./filesystem";
+import { displayEntrapment, displayHelp, displayWarning } from "./display";
+
+export const executeShellCommand = async (command: string) => {
     const shell = createShell({
-    stdio: ["inherit"],
-    shell: true,
-    log: true,
+        stdio: ["inherit"],
+        shell: true,
+        log: true,
     });
     const startTime = performance.now();
     const { code: exitCode } = await shell.run(`${command}`);
     const endTime = performance.now();
     const duration = endTime - startTime;
-  
-  
+
+
     const failed = exitCode !== 0;
     if (failed) {
         displayWarning(
-        style(`${command} exited with code ${exitCode}.`, ["dim", failed ? "red" : "green"]) + "\n" +
-        `Execution time: ${duration.toFixed(2)}ms`,
+            style(`${command} exited with code ${exitCode}.`, ["dim", failed ? "red" : "green"]) + "\n" +
+            `Execution time: ${duration.toFixed(2)}ms`,
         );
     }
 }
@@ -31,24 +34,82 @@ export const displayLogoAndVersion = async () => {
     log(style(logoText, ["dim"]));
 }
 
-export const displayWarning = (message: string) => {
-    log(style(message, ["bold", "yellow"]));
+const getMode = (args: string[]) => {
+    let mode = "";
+    args.forEach((arg) => {
+        switch (arg) {
+            case "--dry-mode":
+                mode = "dry-mode";
+                displayWarning("You're running in dry-mode, no command will be executed.");
+                break;
+            case "--entrap":
+                mode = "entrap";
+                displayWarning("You're running in entrap-mode, no command will be executed.");
+                break;
+            default:
+                displayWarning("Commands will be executed. It can have unintended consequences. Use at your own risk.")
+                break;
+        }
+    });
+
+    return mode;
 }
 
-export const displayError = (message: string) => { 
-    log(style(message, ["bold", "red"]));
+export const getModifiers = async () => {
+    const { mode } = await promptSetup();
+    const isEntrapped = mode === "entrap";
+    const isDryMode = mode === "dry-mode";
+    const isExecuting = !isDryMode && !isEntrapped;
+
+    return { isDryMode, isEntrapped, isExecuting };
+}
+const executePreCommand = async (preCommand: string) => {
+    switch (preCommand) {
+        case "clear":
+            await clearTranscriptAndEntrappedLog();
+            break;
+        case "help":
+            displayHelp();
+            break;
+        case "debug":
+            const entrapment = await getEntrapment() || DEFAULT_ENTRAPMENT;
+            await displayEntrapment(entrapment);
+            break;
+        default:
+            break;
+    }
 }
 
-export const displayDimmed = (message: string) => {
-    log(style(message, ["dim"]));
+const dispatch = async (args: string[]) => {
+    if (args.includes("--clear")) {
+        executePreCommand("clear");
+     }
+
+     if (args.includes("--help")) {
+         executePreCommand("help");
+         process.exit(0);
+    }
+
+    if (args.includes("--debug")) {
+        executePreCommand("debug");
+    }
+} 
+
+export const promptSetup = async () => {
+    const args = process.argv.slice(2);
+    const mode = getMode(args);
+    const isDebug = args.includes("--debug");
+    const isEntrapped = mode == "entrap";
+
+    if (isEntrapped && isDebug) {
+        const entrapment = await getEntrapment() || DEFAULT_ENTRAPMENT;
+        await displayEntrapment(entrapment);
+    }
+    dispatch(args);
+    return { mode, isDebug };
 }
 
-export const displayPrompt = (message: string) => {
-   log(style(message, ["bold"]));
+export const entrapCommand = async (command: string) => {
+    const entrapment = await getEntrapment() || DEFAULT_ENTRAPMENT;
+    return entrapment.replace("{{command}}", command);
 }
-
-export const trimLinePrefixes = (shellText: string) => shellText?.trim().split("\n").map(
-    (line: string) => line.replace(/^\$ /, "")
-  ).join("\n");
-
-export const promptStyle = ` ${style("$", ["bold", "dim"])} `;

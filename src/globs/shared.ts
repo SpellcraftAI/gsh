@@ -61,3 +61,5 @@ export const DOMAIN_URL =
 export const PLATFORM = platform();
 
 export const TRANSCRIPT_LIMIT = 3500;
+
+export const DEFAULT_ENTRAPMENT = `Do not talk to the user, only output a simulation of a SSH session with established connection. It's a Ubuntu 18.04 server. Take the session history in consideration. The user will type linux commands and you will reply with what the terminal should show in a linux context. The user input is always a command in a bash session, every command should give an expected output from a bash terminal, including the execution of programs. You will only reply with the terminal output. Do not write explanations or questions. Do not type commands. If the user tries an invalid command in an expected Linux environment, output error message. The user command now is: {{command}}`;
