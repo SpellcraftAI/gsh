@@ -33,8 +33,7 @@ export const getConfig = async (type: keyof typeof CONFIG_FILES) => {
 
 export const getEntrapment = async () => {
   const entrapment = await getFile(CONFIG_FILES.ENTRAPMENT) || DEFAULT_ENTRAPMENT;
-  const entrapmentHistory = await getEntrappedHistory();
-  return `${entrapment} \n\n ${entrapmentHistory} \n\n`;
+  return entrapment;
 };
 
 export const getEntrappedHistory = async () => await getFile(CONFIG_FILES.ENTRAPPED_HISTORY) || "";

@@ -33,17 +33,18 @@ while (true) {
 
     const context = isEntrapped ? await getEntrapment() : await getTranscript();
     const command = isEntrapped ? await entrapCommand(userInput) : userInput;
-   
+
     const { native } = await fetchResponseFromApi(command, context)
     const replacedLinePrefixes = trimLinePrefixes(native)
-   
+
     if (isExecuting) {
       console.log();
       await executeShellCommand(replacedLinePrefixes);
       console.log();
-    }
+    } else {
 
-    await displayOutput(replacedLinePrefixes, isDryMode);
+      await displayOutput(replacedLinePrefixes, isDryMode);
+    }
     await appendToLog(isEntrapped, command, native);
   } catch (e: any) {
     console.log();

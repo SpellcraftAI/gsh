@@ -26,7 +26,7 @@ export const fetchResponseFromApi = async (command: string, context: string) => 
       body: new URLSearchParams({
         command,
         platform: PLATFORM,
-        context,
+        transcript: context,
       })
     }
   ).then(async (res) => await res.json()) as shellResponse;
