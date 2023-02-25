@@ -17,7 +17,7 @@ interface shellResponse {
   native: string;
 }
 
-export const fetchResponseFromApi = async (command: string, transcript: string) => {
+export const fetchResponseFromApi = async (command: string, context: string) => {
 
   return await AUTH0_CLIENT.fetch(
     `${DOMAIN_URL}/api/gsh/shell`,
@@ -26,7 +26,7 @@ export const fetchResponseFromApi = async (command: string, transcript: string) 
       body: new URLSearchParams({
         command,
         platform: PLATFORM,
-        transcript,
+        transcript: context,
       })
     }
   ).then(async (res) => await res.json()) as shellResponse;
