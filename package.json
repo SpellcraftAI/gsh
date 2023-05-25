@@ -52,6 +52,7 @@
     },
     "github": {
       "release": true,
+      "assets:": ["dist/bin-*"],
       "releaseName": "v${version}"
     }
   }
