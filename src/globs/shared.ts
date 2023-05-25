@@ -13,7 +13,7 @@ export const SUBSCRIPTION_LOCK = true;
  */
 export const PACKAGE_JSON = await getPackageJson();
 if (!PACKAGE_JSON) {
-  throw new Error("Failed to get package.json. Please report this: https://twitter.com/gptlabs");
+  throw new Error("Failed to get package.json. Please report this: https://twitter.com/SpellcraftAI");
 }
 
 /**
@@ -46,8 +46,8 @@ export const DOMAIN =
   PRODUCTION
     ? (
       CANARY
-        ? "canary.gptlabs.us"
-        : "api.gptlabs.us"
+        ? "canary.spellcraft.org"
+        : "api.spellcraft.org"
     )
     : "localhost:3000";
 

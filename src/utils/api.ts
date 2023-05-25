@@ -10,7 +10,7 @@ export async function checkAuth() {
     error("You are not logged in.", [], { postLines: 1 });
 
     log("Use UPG to log in using `upg login`:", ["dim"]);
-    log("https://gptlabs.us/upg", ["underline"]);
+    // log("https://gptlabs.us/upg", ["underline"]);
 
     process.exit(1);
   }
