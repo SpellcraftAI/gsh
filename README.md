@@ -2,8 +2,8 @@
              _     
   __ _  ___ | |__    GSH Shell
  / _` |/ __|| '_ \ 
-| (_| |\__ \| | | |  🇺🇸  Built by GPT Labs
- \__, ||___/|_| |_|  (c) 2022 GPT Labs License
+| (_| |\__ \| | | |  🇺🇸  Built by Spellcraft
+ \__, ||___/|_| |_|  (c) 2022 Spellcraft License
  |___/
  
 ```
