@@ -13,13 +13,11 @@
   },
   "files": [
     "dist/**/*.js",
-    "dist/**/*.txt",
-    "dist/encoder.json",
-    "dist/vocab.bpe"
+    "dist/**/*.txt"
   ],
   "scripts": {
     "dev": "tsmodule dev",
-    "build": "tsmodule build --standalone \"src/{bin.ts,header.txt,encoder.json,vocab.bpe}\"",
+    "build": "tsmodule build --standalone \"src/{bin.ts,header.txt}\"",
     "lint": "eslint --fix",
     "pretest": "yarn build -d && npm link -f",
     "test": "cross-env NODE_ENV=test yarn ava",

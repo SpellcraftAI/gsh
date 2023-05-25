@@ -2,8 +2,7 @@ import { existsSync, mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { dirname } from "path";
 import { CONFIG_FILES } from "../globs/node";
-import { DEFAULT_ENTRAPMENT, TRANSCRIPT_LIMIT } from "../globs/shared";
-import { decode, encode } from "gpt-3-encoder";
+import { DEFAULT_ENTRAPMENT, TRANSCRIPT_CHARACTER_LIMIT } from "../globs/shared";
 
 const getFile = async (path: string) => {
   const dir = dirname(path);
@@ -20,11 +19,12 @@ const getFile = async (path: string) => {
 };
 
 const enforceTranscriptTokenLimit = async (transcript: string) => {
-  const gptEncoded = encode(transcript);
-  if (gptEncoded.length < TRANSCRIPT_LIMIT) return transcript;
-  const enforcedEncodedTranscript = gptEncoded.reverse().slice(0, TRANSCRIPT_LIMIT);
-  return decode(enforcedEncodedTranscript.reverse());
-}
+  if (transcript.length < TRANSCRIPT_CHARACTER_LIMIT) {
+    return transcript;
+  } else {
+    return transcript.slice(transcript.length - TRANSCRIPT_CHARACTER_LIMIT);
+  }
+};
 
 export const getConfig = async (type: keyof typeof CONFIG_FILES) => {
   const file = await getFile(CONFIG_FILES[type]);
@@ -62,12 +62,12 @@ export const appendToEntrappedLog =  async (sessionHistory: string) => await app
 export const appendToLog = async (isEntrapped: boolean, command: string, native: string) => {
   if (isEntrapped) {
     await appendToEntrappedLog(native);
-  } else { 
+  } else {
     await appendToTranscript(command, native);
   }
-}
+};
 
 export const clearTranscriptAndEntrappedLog = async () => {
   await writeFile(CONFIG_FILES.TRANSCRIPT, "");
   await writeFile(CONFIG_FILES.ENTRAPPED_HISTORY, "");
-}
+};
