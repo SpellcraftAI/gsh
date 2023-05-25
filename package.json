@@ -45,5 +45,15 @@
     "eslint": "^8.41.0",
     "openai": "^3.2.1",
     "typescript": "^5.0.4"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "release: v${version}",
+      "tagAnnotation": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    }
   }
 }
