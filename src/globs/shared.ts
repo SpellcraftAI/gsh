@@ -1,6 +1,5 @@
 import { platform } from "os";
 import { env } from "process";
-// import { highlight as highlightRaw } from "cli-highlight";
 import { getPackageJson } from "../packageJson";
 
 /**
@@ -9,22 +8,20 @@ import { getPackageJson } from "../packageJson";
 export const SUBSCRIPTION_LOCK = true;
 
 /**
- * The contents of the package.json file at runtime.
- */
-export const PACKAGE_JSON = await getPackageJson();
-if (!PACKAGE_JSON) {
-  throw new Error("Failed to get package.json. Please report this: https://twitter.com/SpellcraftAI");
-}
-
-/**
  * The version of this package at runtime.
  */
-export const { version: VERSION } = PACKAGE_JSON;
+export const getVersion = async () => {
+  const packageJson = await getPackageJson();
+  return packageJson?.version;
+};
 
 /**
  * Whether this is the canary build.
  */
-export const CANARY = VERSION.includes("canary");
+export const isCanary = async () => {
+  const version = await getVersion();
+  return version?.includes("canary") ?? false;
+};
 
 /**
  * Whether this process is running in development mode.
@@ -42,21 +39,27 @@ export const PRODUCTION = !DEVELOPMENT;
 /**
  * The URL this site is running on.
  */
-export const DOMAIN =
-  PRODUCTION
-    ? (
-      CANARY
-        ? "canary.spellcraft.org"
-        : "api.spellcraft.org"
-    )
-    : "localhost:3000";
+export const getDomain = async () => {
+  const canary = await isCanary();
+  return (
+    PRODUCTION
+      ? (
+        canary
+          ? "canary.spellcraft.org"
+          : "api.spellcraft.org"
+      )
+      : "localhost:3000"
+  );
+};
 
-export const DOMAIN_URL =
-  DOMAIN === "localhost:3000"
-    ? `http://${DOMAIN}`
-    : `https://${DOMAIN}`;
-
-
+export const getDomainURL = async () => {
+  const domain = await getDomain();
+  return (
+    domain === "localhost:3000"
+      ? `http://${domain}`
+      : `https://${domain}`
+  );
+};
 
 export const PLATFORM = platform();
 

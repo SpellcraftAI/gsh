@@ -1,14 +1,11 @@
 import { readFile } from "fs/promises";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path";
+import { PROJECT_ROOT } from "./root";
 
 export type PackageJson = Record<string, string>;
 
 export const getPackageJson = async (): Promise<PackageJson | null> => {
-  const packageJsonPath = resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    "../package.json"
-  );
+  const packageJsonPath = resolve(PROJECT_ROOT, "package.json");
 
   try {
     return JSON.parse(await readFile(packageJsonPath, "utf8"));

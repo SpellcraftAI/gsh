@@ -1,7 +1,7 @@
 import { AUTH0_CLIENT } from "../globs/node";
+import { PLATFORM, getDomainURL } from "../globs/shared";
 import { ChatCompletionRequestMessage } from "openai";
 import { error, log } from "@tsmodule/log";
-import { DOMAIN_URL, PLATFORM } from "../globs/shared";
 import { addToTranscript, getTranscript } from "./filesystem";
 
 export async function checkAuth() {
@@ -19,11 +19,12 @@ export async function checkAuth() {
 export type Transcript = ChatCompletionRequestMessage[];
 
 export const sendChatMessage = async (message: string): Promise<string> => {
+  const domainURL = await getDomainURL();
   await addToTranscript({ role: "user", content: message });
 
   const transcript = await getTranscript();
   const apiRequest = await AUTH0_CLIENT.fetch(
-    `${DOMAIN_URL}/api/gsh/shell`,
+    `${domainURL}/api/gsh/shell`,
     {
       method: "POST",
       body: JSON.stringify({

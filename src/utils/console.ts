@@ -1,7 +1,7 @@
 import { log, style } from "@tsmodule/log";
 import { createShell } from "universal-shell";
-import { VERSION } from "../globs/shared";
 import { displayWarning } from "./display";
+import { getVersion } from "../globs/shared";
 // import { clearTranscript } from "./filesystem";
 
 export const executeShellCommand = async (command: string) => {
@@ -35,5 +35,11 @@ export const displayLogoAndVersion = async () => {
   // const logoFile = await readFile(logoPath, "utf8");
   // const logoText = logoFile.replace("(A version number goes here)", VERSION);
 
-  log(style(`GSH v${VERSION}\n`, ["bold", "dim"]));
+  /**
+   * @todo Fix this - version / package.json currently doesn't load as location
+   * of package.json changes from ../package.json to ../../package.json when
+   * compiled.
+   */
+  const version = await getVersion();
+  log(style(`GSH v${version}\n`, ["bold", "dim"]));
 };

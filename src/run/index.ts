@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { createInterface } from "readline";
 import { stdin, stdout } from "process";
-import { checkAuth, clearTranscript, displayError, displayLogoAndVersion, displayOutput, displayWarning, executeShellCommand, promptStyle, sendChatMessage, trimLinePrefixes } from "../utils";
+import { checkAuth, clearTranscript, displayError, displayOutput, displayWarning, executeShellCommand, promptStyle, sendChatMessage, trimLinePrefixes } from "../utils";
 
 export interface RunOptions {
   dangerous?: boolean;
@@ -13,7 +13,8 @@ export const run = async ({
   clear = false,
 }: RunOptions = {}) => {
   await checkAuth();
-  await displayLogoAndVersion();
+  // @todo - Enable this again later.
+  // await displayLogoAndVersion();
 
   if (clear) {
     await clearTranscript();
