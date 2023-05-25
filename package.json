@@ -1,6 +1,6 @@
 {
   "name": "@spellcraft/gsh",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "platform": "node",
