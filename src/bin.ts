@@ -1,60 +1,13 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-import { createInterface } from "readline";
-import { stdin, stdout } from "process";
-import { appendToLog, getEntrapment, getTranscript } from "./utils/filesystem";
-import { fetchResponseFromApi, checkAuth } from "./utils/api";
-import {
-  displayLogoAndVersion,
-  entrapCommand,
-  executeShellCommand,
-  getModifiers,
-} from "./utils/console";
-import {
-  displayError,
-  trimLinePrefixes,
-  promptStyle,
-  displayOutput,
-  displayAlert,
-} from "./utils/display";
+import { Command } from "commander";
+import { run } from "./run";
 
-checkAuth();
-await displayLogoAndVersion();
-const { isExecuting, isDryMode, isEntrapped } = await getModifiers();
-isExecuting &&
-  displayAlert(
-    "COMMANDS WILL BE EXECUTED. USE WITH CAUTION. IF YOU ARE NOT SURE, USE DRY MODE: `gsh --dry-mode`."
-  );
+const program = new Command();
 
-const rl = createInterface({
-  input: stdin,
-  output: stdout,
-});
+program
+  .option("-d, --dangerous", "DANGEROUS MODE: Run commands written by GPT", false)
+  .option("-c, --clear", "clear transcript.")
+  .action(run);
 
-rl.on("SIGINT", () => {
-  process.exit(1);
-});
-
-while (true) {
-  try {
-    const userInput = await new Promise<string>((resolve) => {
-      rl.question(promptStyle, resolve);
-    });
-    const context = isEntrapped ? await getEntrapment() : await getTranscript();
-    const command = isEntrapped ? await entrapCommand(userInput) : userInput;
-    const { native } = await fetchResponseFromApi(command, context);
-    const replacedLinePrefixes = trimLinePrefixes(native);
-
-    if (isExecuting) {
-      console.log();
-      await executeShellCommand(replacedLinePrefixes);
-      console.log();
-    } else {
-      await displayOutput(replacedLinePrefixes, isDryMode);
-    }
-    await appendToLog(isEntrapped, command, native);
-  } catch (e: any) {
-    console.log();
-    displayError(`Error: ${e.message}`);
-  }
-}
+program.parse(process.argv);

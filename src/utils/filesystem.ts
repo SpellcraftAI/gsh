@@ -2,7 +2,10 @@ import { existsSync, mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { dirname } from "path";
 import { CONFIG_FILES } from "../globs/node";
-import { DEFAULT_ENTRAPMENT, TRANSCRIPT_CHARACTER_LIMIT } from "../globs/shared";
+import { TRANSCRIPT_CHARACTER_LIMIT } from "../globs/shared";
+import { Transcript } from "./api";
+import { ChatCompletionRequestMessage } from "openai";
+import { createDebugLogger } from "debug-logging";
 
 const getFile = async (path: string) => {
   const dir = dirname(path);
@@ -18,12 +21,20 @@ const getFile = async (path: string) => {
   return "";
 };
 
-const enforceTranscriptTokenLimit = async (transcript: string) => {
-  if (transcript.length < TRANSCRIPT_CHARACTER_LIMIT) {
-    return transcript;
-  } else {
-    return transcript.slice(transcript.length - TRANSCRIPT_CHARACTER_LIMIT);
+export const withCharacterLimit = (transcript: Transcript) => {
+  let characterCount = 0;
+  const trimmedTranscript: Transcript = [];
+
+  for (const message of transcript.reverse()) {
+    characterCount += message.content.length;
+    if (characterCount <= TRANSCRIPT_CHARACTER_LIMIT) {
+      trimmedTranscript.push(message);
+    } else {
+      break;
+    }
   }
+
+  return trimmedTranscript.reverse();
 };
 
 export const getConfig = async (type: keyof typeof CONFIG_FILES) => {
@@ -31,43 +42,38 @@ export const getConfig = async (type: keyof typeof CONFIG_FILES) => {
   return JSON.parse(file || "{}");
 };
 
-export const getEntrapment = async () => {
-  const entrapment = await getFile(CONFIG_FILES.ENTRAPMENT) || DEFAULT_ENTRAPMENT;
-  return entrapment;
+export const getTranscript = async (): Promise<Transcript> => {
+  const file = await getFile(CONFIG_FILES.TRANSCRIPT);
+  const linesWithData = file.split("\n").filter(Boolean);
+
+  const parsedJsonLines = linesWithData.map((line) => JSON.parse(line));
+  const transcript = withCharacterLimit(parsedJsonLines);
+
+  return transcript;
 };
 
-export const getEntrappedHistory = async () => await getFile(CONFIG_FILES.ENTRAPPED_HISTORY) || "";
-
-export const getTranscript = async () => {
-  const file = await getFile(CONFIG_FILES.TRANSCRIPT);
-  return enforceTranscriptTokenLimit(file) || "";
+export const clearTranscript = async () => {
+  await writeFile(CONFIG_FILES.TRANSCRIPT, "", "utf8");
 };
 
 export async function appendToFile(path: string, content: string) {
   await writeFile(path, content, { flag: "a" });
 }
 
-export async function appendToTranscript(command: string,
-  native: string,) {
-  const transcriptItem = `
+export async function addToTranscript(
+  ...messages: ChatCompletionRequestMessage[]
+) {
+  const DEBUG = createDebugLogger(addToTranscript);
 
-${command}
+  for (const message of messages) {
+    if (!message.role || !message.content) {
+      DEBUG.log("Invalid message", { message });
+      return;
+    }
 
-${native}`;
-  await appendToFile(CONFIG_FILES.TRANSCRIPT, transcriptItem);
-}
-
-export const appendToEntrappedLog =  async (sessionHistory: string) => await appendToFile(CONFIG_FILES.ENTRAPPED_HISTORY, sessionHistory);
-
-export const appendToLog = async (isEntrapped: boolean, command: string, native: string) => {
-  if (isEntrapped) {
-    await appendToEntrappedLog(native);
-  } else {
-    await appendToTranscript(command, native);
+    await appendToFile(
+      CONFIG_FILES.TRANSCRIPT,
+      JSON.stringify(message) + "\n"
+    );
   }
-};
-
-export const clearTranscriptAndEntrappedLog = async () => {
-  await writeFile(CONFIG_FILES.TRANSCRIPT, "");
-  await writeFile(CONFIG_FILES.ENTRAPPED_HISTORY, "");
-};
+}

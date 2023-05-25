@@ -1,6 +1,8 @@
 import { AUTH0_CLIENT } from "../globs/node";
+import { ChatCompletionRequestMessage } from "openai";
 import { error, log } from "@tsmodule/log";
 import { DOMAIN_URL, PLATFORM } from "../globs/shared";
+import { addToTranscript, getTranscript } from "./filesystem";
 
 export async function checkAuth() {
   const authorized = await AUTH0_CLIENT.isAuthorized();
@@ -13,21 +15,29 @@ export async function checkAuth() {
     process.exit(1);
   }
 }
-interface shellResponse {
-  native: string;
-}
 
-export const fetchResponseFromApi = async (command: string, context: string) => {
+export type Transcript = ChatCompletionRequestMessage[];
 
-  return await AUTH0_CLIENT.fetch(
+export const sendChatMessage = async (message: string): Promise<string> => {
+  await addToTranscript({ role: "user", content: message });
+
+  const transcript = await getTranscript();
+  const apiRequest = await AUTH0_CLIENT.fetch(
     `${DOMAIN_URL}/api/gsh/shell`,
     {
       method: "POST",
-      body: new URLSearchParams({
-        command,
+      body: JSON.stringify({
         platform: PLATFORM,
-        transcript: context,
-      })
+        transcript,
+      }),
     }
-  ).then(async (res) => await res.json()) as shellResponse;
-}
+  );
+
+  const response = await apiRequest.text();
+
+  await addToTranscript(
+    { role: "assistant", content: response }
+  );
+
+  return response;
+};

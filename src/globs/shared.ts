@@ -61,5 +61,3 @@ export const DOMAIN_URL =
 export const PLATFORM = platform();
 
 export const TRANSCRIPT_CHARACTER_LIMIT = 2000;
-
-export const DEFAULT_ENTRAPMENT = "\n\nInstructions: Do not talk to the user, only output a simulation of a SSH session with established connection. It should mirror a Unix server. Take the session history in consideration. Only reply with the output expected from the command given the Unix platform. You will only reply with the terminal output.  Do not type commands. Do not reply with commands. If the user tries an invalid command in an expected Unix environment, output error message. The user command now is: {{command}}\n\nSession History:\n\n";
