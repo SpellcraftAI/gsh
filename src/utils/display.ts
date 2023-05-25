@@ -35,7 +35,7 @@ export const displayDimmed = (message: string) => {
 };
 
 export const displayPrompt = (message: string) => {
-  log(style(message, ["bold"]));
+  log(message, ["bold"], { postLines: 0 });
 };
 
 export const displayOutput = (message: string, isDimmed = false) => {

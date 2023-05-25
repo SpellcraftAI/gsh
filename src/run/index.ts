@@ -29,21 +29,24 @@ export const run = async ({
   });
 
   if (!dangerous) {
-    displayWarning("SAFE MODE: Commands are not executed.\n");
+    displayWarning("SAFE MODE: Commands are not executed.");
   } else {
-    displayError("WARNING: COMMANDS WILL RUN. Safe mode is disabled.\n");
+    displayError("WARNING: COMMANDS WILL RUN. Safe mode is disabled.");
   }
 
   while (true) {
     try {
+      console.log();
+
       const userInput = await new Promise<string>((resolve) => {
         rl.question(promptStyle, resolve);
       });
 
+      console.log();
+
       const chatResponse = await sendChatMessage(userInput);
       const replacedLinePrefixes = trimLinePrefixes(chatResponse);
 
-      console.log();
       if (!dangerous) {
         displayOutput(replacedLinePrefixes, dangerous);
       } else {

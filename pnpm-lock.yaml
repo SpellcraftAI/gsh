@@ -14,8 +14,8 @@ dependencies:
     specifier: ^4.1.2
     version: 4.1.2
   universal-shell:
-    specifier: ^35.3.0
-    version: 35.3.0
+    specifier: ^35.4.0
+    version: 35.4.0
 
 devDependencies:
   '@tsmodule/tsmodule':
@@ -2407,8 +2407,8 @@ packages:
     hasBin: true
     dev: true
 
-  /universal-shell@35.3.0:
-    resolution: {integrity: sha512-Fn7kCKat7RYqOXOtcAqGBrH5TEqClNP0u6IpcuxOJ2/1hFmimO8X/yd676WbBHqIcUp+M79+AHJyraAEJEo7MQ==}
+  /universal-shell@35.4.0:
+    resolution: {integrity: sha512-1fFu4HnnswaqEr7L+lsEycStwxMdj7N4Lsuj+SzDP+pKJ064QYTDb/22dMjq9K50clkeJ93iAtzK+5EislgcQQ==}
     dev: false
 
   /universalify@2.0.0:

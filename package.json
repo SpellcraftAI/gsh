@@ -34,7 +34,7 @@
     "auth0-node-client": "5.2.1-cjs.0",
     "commander": "^10.0.1",
     "debug-logging": "^4.1.2",
-    "universal-shell": "^35.3.0"
+    "universal-shell": "^35.4.0"
   },
   "devDependencies": {
     "@tsmodule/tsmodule": "^44.7.0",
