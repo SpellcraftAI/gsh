@@ -42,6 +42,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.41.0",
     "openai": "^3.2.1",
+    "pkg": "^5.8.1",
     "typescript": "^5.0.4"
   },
   "release-it": {
