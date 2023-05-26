@@ -2,7 +2,7 @@
   "name": "@spellcraft/gsh",
   "version": "1.4.1-canary.0",
   "license": "SEE LICENSE IN LICENSE",
-  "type": "module",
+  "type": "commonjs",
   "platform": "node",
   "engines": {
     "node": ">=14"
@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "dev": "tsmodule dev",
-    "build": "tsmodule build --binary \"src/{bin.ts,header.txt}\"",
+    "build": "tsmodule build --binary",
     "lint": "eslint --fix",
     "test": "pnpm build && cross-env NODE_ENV=test pnpm ava",
     "release": "release-it --ci -VV",
