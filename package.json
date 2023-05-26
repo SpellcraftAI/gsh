@@ -1,6 +1,6 @@
 {
   "name": "@spellcraft/gsh",
-  "version": "1.4.1-canary.0",
+  "version": "1.4.1-canary.1",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
   "platform": "node",
