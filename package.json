@@ -56,7 +56,9 @@
         "submit": true
       },
       "assets:": [
-        "dist/bin-*"
+        "dist/bin-linux",
+        "dist/bin-macos",
+        "dist/bin-win.exe"
       ],
       "releaseName": "v${version}"
     }
