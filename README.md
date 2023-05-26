@@ -1,14 +1,4 @@
-```
-             _     
-  __ _  ___ | |__    GSH Shell
- / _` |/ __|| '_ \ 
-| (_| |\__ \| | | |  🇺🇸  Built by Spellcraft
- \__, ||___/|_| |_|  (c) 2022 Spellcraft License
- |___/
- 
-```
-
-### A natural language shell for Bash and Powershell.
+# GSH: Natural Language Terminal
 
 GSH loads a terminal that takes commands in any language: English, Bash,
 Powershell, Japanese, Latin, whatever you want.
