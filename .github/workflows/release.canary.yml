@@ -36,7 +36,7 @@ jobs:
     - name: Authenticate with private NPM package
       run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-    - name: git config
+    - name: Configure Git
       run: |
         git config user.name "${GITHUB_ACTOR}"
         git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
@@ -60,11 +60,6 @@ jobs:
     
     - name: Install
       run: pnpm i
-
-    - name: Configure Git
-      run: |
-        git config user.name "${GITHUB_ACTOR}"
-        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
     - name: Test Production Bundle & Release
       run: npx release-it --preRelease=canary --ci -VV
