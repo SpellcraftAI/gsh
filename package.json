@@ -52,6 +52,9 @@
     },
     "github": {
       "release": true,
+      "comments": {
+        "submit": true
+      },
       "assets:": [
         "dist/bin-*"
       ],
