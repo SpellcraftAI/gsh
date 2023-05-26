@@ -55,10 +55,8 @@
       "comments": {
         "submit": true
       },
-      "assets:": [
-        "dist/bin-linux",
-        "dist/bin-macos",
-        "dist/bin-win.exe"
+      "assets": [
+        "dist/bin-*"
       ],
       "releaseName": "v${version}"
     }
